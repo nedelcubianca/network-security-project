@@ -54,3 +54,4 @@ This network simulates a secure, segmented infrastructure with access control an
 ---
 
 ###  Network Topology Diagram
+![Network Topology](https://github.com/<nedelcubianca>/network-security-project/blob/main/topology.png?raw=true)
