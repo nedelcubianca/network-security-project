@@ -51,7 +51,6 @@ This network simulates a secure, segmented infrastructure with access control an
 #### Inter-router Link
 - Router0 <=> Router1: '10.0.0.1/30' <=> '10.0.0.2/30'
 
----
 
 ###  Network Topology Diagram
-![Network Topology](https://github.com/<nedelcubianca>/network-security-project/blob/main/topology.png?raw=true)
+![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/main/topology.png?raw=true)
