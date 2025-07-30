@@ -28,3 +28,29 @@ To design and implement a realistic network scenario where:
 
 ---
 
+## 🌐 1. Network Topology
+
+This network simulates a secure, segmented infrastructure with access control and monitoring mechanisms.
+
+### Devices & Addresses
+
+#### LAN 192.168.1.0/24 (User/Attacker Zone - Behind Router0)
+- PC0: '192.168.1.10' (Normal user)
+- PC1: '192.168.1.11' (Simulated attacker)
+- Server0: '192.168.1.100' (Syslog)
+- Switch0
+- Router0
+
+#### LAN 172.16.0.0/24 (Service Zone - Behind Router1)
+- Server1: '203.0.113.1' (Web Server via NAT)
+- Server2: Reserved
+- Switch1
+- Router1
+
+
+#### Inter-router Link
+- Router0 <=> Router1: '10.0.0.1/30' <=> '10.0.0.2/30'
+
+---
+
+###  Network Topology Diagram
