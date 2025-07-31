@@ -151,4 +151,9 @@ In this section, we simulate a real-world scenario where an attacker attempts to
  username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
  username2 : 'guest'  password2 : 'pass123'  permissions2 : 'list'
  ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/ftp_config.png?raw=true)
- 
+ #### Step 1: Legitimate Access from PC0
+ Open Command Prompt on PC0 and run: ftp 192.168.1.100
+ Enter:  
+Username: admin
+Password: adminpass
+![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc0.png?raw=true)
