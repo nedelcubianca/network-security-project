@@ -111,5 +111,5 @@ Configuring DNS on Server0: we use Services tab, then activate the DNS, add a ne
 
 Accesing 'http://web1' from PC0:
 ![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
-
-
+Also, we can successfully access 'http://203.0.113.1'.
+Note: If we intend to configure an additional public IP address to be reachable by the 192.168.1.0/24 internal network, a separate and properly configured server is required. A single server cannot be assigned multiple distinct NAT public addresses for the same internal network segment.
