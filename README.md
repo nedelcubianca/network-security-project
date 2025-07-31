@@ -1,8 +1,8 @@
-# 🔐 Network Security Simulation Project
+#  Network Security Simulation Project
 
 This project simulates a secure network architecture using **Cisco Packet Tracer**, focusing on access control, network monitoring, and offensive security testing.
 
-## 🎯 Objective
+##  Objective
 
 To design and implement a realistic network scenario where:
 - Devices are assigned static IPs.
@@ -11,13 +11,13 @@ To design and implement a realistic network scenario where:
 - **Syslog** is used to monitor and log security events.
 - **Red Team techniques** are simulated to test the resilience of the network.
 
-## 🛠 Tools & Technologies
+##  Tools & Technologies
 
 - Cisco Packet Tracer 
 - Cisco IOS commands (CLI)
 - GitHub Pages for documentation
 
-## 📁 Project Structure
+##  Project Structure
 
 1. Network Topology
 2. IP Configuration & NAT Setup
@@ -55,7 +55,7 @@ This network simulates a secure, segmented infrastructure with access control an
 ###  Network Topology Diagram
 ![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/Topology_img.png?raw=true)
 
----
+
 ##  2. IP Addressing & NAT Configuration
 In this step, static IP addresses are manually assigned to all devices, and NAT is configured to allow public access to the internal web server.
 
@@ -111,7 +111,8 @@ Configuring DNS on Server0: we use Services tab, then activate the DNS, add a ne
 
 Accesing 'http://web1' from PC0:
 ![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
-Also, we can successfully access 'http://203.0.113.1'.
+
+Also, we can successfully access 'http://203.0.113.1' and 'https://203.0.113.1'.
 Note: If we intend to configure an additional public IP address to be reachable by the 192.168.1.0/24 internal network, a separate and properly configured server is required. A single server cannot be assigned multiple distinct NAT public addresses for the same internal network segment.
 ## 3. ACL Implementation – Restricting Web Access
 Access Control Lists (ACLs) are used to restrict traffic from the attacker device (PC1) to the internal web server (Server1) using both HTTP (port 80) and HTTPS (port 443). All other traffic remains permitted.
@@ -121,6 +122,7 @@ Access Control Lists (ACLs) are used to restrict traffic from the attacker devic
 ###  ACL Configuration on Router0
 #### Create an extended ACL (with log)
 Router0(config)# access-list 100 deny tcp 192.168.1.11 0.0.0.0 203.0.113.1 0.0.0.0 eq 80 log
+Router0(config)# access-list 100 deny tcp host 192.168.1.11 host 203.0.113.1 eq 443
 Router0(config)# access-list 100 permit ip any any
 #### Apply the ACL on the LAN interface
 Router0(config)# interface GigabitEthernet0/0
@@ -130,3 +132,23 @@ Router0(config-if)# exit
 ![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/acl_pc1.png?raw=true)
 #### Verify ACL Matches
 ![Verify ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/verify_acl.png?raw=true)
+##  Section 4 – Red Team Simulation: FTP Attack
+In this section, we simulate a real-world scenario where an attacker attempts to exploit an exposed FTP server using weak credentials and limited permissions. This exercise demonstrates the risks associated with insecure services in a networked environment.
+
+### Objective
+
+- Deploy and configure an FTP server on Server0
+- Create two FTP users: one with full permissions ('admin') and one with restricted access ('guest')
+- Simulate a legitimate connection from PC0
+- Simulate an unauthorized access attempt from PC1
+- Analyze potential risks and security implications
+- 
+  ###  FTP Server Setup – Server0
+ **IP Address**: '192.168.1.100'
+ **Service**: FTP
+ **Status**: ON
+ #### 👥 FTP Users:
+ username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
+ username2 : 'guest'  password2 : 'pass123'  permissions2 : 'list'
+ ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/ftp_config.png?raw=true)
+ 
