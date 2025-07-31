@@ -110,7 +110,7 @@ ip route 203.0.113.0 255.255.255.0 10.0.0.2
 Configuring DNS on Server0: we use Services tab, then activate the DNS, add a new registration with the name 'web1' and the address '203.0.113.1'
 
 Accesing 'http://web1' from PC0:
-![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
+![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
 Also, we can successfully access 'http://203.0.113.1'.
 Note: If we intend to configure an additional public IP address to be reachable by the 192.168.1.0/24 internal network, a separate and properly configured server is required. A single server cannot be assigned multiple distinct NAT public addresses for the same internal network segment.
 ## 3. ACL Implementation – Restricting Web Access
@@ -127,3 +127,6 @@ Router0(config)# interface GigabitEthernet0/0
 Router0(config-if)# ip access-group 100 in
 Router0(config-if)# exit
 #### Test with PC1:
+![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/acl_pc1.png?raw=true)
+#### Verify ACL Matches
+![Verify ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/verify_acl.png?raw=true)
