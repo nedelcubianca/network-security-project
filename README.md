@@ -96,7 +96,7 @@ ip nat outside
 no shutdown
 
 interface Gig0/1
-ip address 172.16.0.1 255.255.255.0 //-> //-> the interface to Server1 
+ip address 172.16.0.1 255.255.255.0 //-> the interface to Server1 
 ip nat inside
 no shutdown
 exit
@@ -113,3 +113,17 @@ Accesing 'http://web1' from PC0:
 ![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
 Also, we can successfully access 'http://203.0.113.1'.
 Note: If we intend to configure an additional public IP address to be reachable by the 192.168.1.0/24 internal network, a separate and properly configured server is required. A single server cannot be assigned multiple distinct NAT public addresses for the same internal network segment.
+## 3. ACL Implementation – Restricting Web Access
+Access Control Lists (ACLs) are used to restrict traffic from the attacker device (PC1) to the internal web server (Server1) using both HTTP (port 80) and HTTPS (port 443). All other traffic remains permitted.
+### Goal
+- Deny PC1 (`192.168.1.11`) from accessing `Server1 (203.0.113.1)` via ports 80 and 443
+- Allow all other traffic
+###  ACL Configuration on Router0
+#### Create an extended ACL (with log)
+Router0(config)# access-list 100 deny tcp 192.168.1.11 0.0.0.0 203.0.113.1 0.0.0.0 eq 80 log
+Router0(config)# access-list 100 permit ip any any
+#### Apply the ACL on the LAN interface
+Router0(config)# interface GigabitEthernet0/0
+Router0(config-if)# ip access-group 100 in
+Router0(config-if)# exit
+#### Test with PC1:
