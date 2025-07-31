@@ -28,7 +28,7 @@ To design and implement a realistic network scenario where:
 
 ---
 
-## 🌐 1. Network Topology
+##  1. Network Topology
 
 This network simulates a secure, segmented infrastructure with access control and monitoring mechanisms.
 
@@ -54,3 +54,62 @@ This network simulates a secure, segmented infrastructure with access control an
 
 ###  Network Topology Diagram
 ![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/Topology_img.png?raw=true)
+
+---
+##  2. IP Addressing & NAT Configuration
+In this step, static IP addresses are manually assigned to all devices, and NAT is configured to allow public access to the internal web server.
+
+###  IP Address Plan
+| Device        | Interface          | IP Address   | Subnet Mask      | Default Gateway|
+|---------------|--------------------|--------------|------------------|----------------|
+| PC0           | NIC                | 192.168.1.10 | 255.255.255.0    | 192.168.1.1    |
+| PC1           | NIC                | 192.168.1.11 | 255.255.255.0    | 192.168.1.1    |
+| Server0       | NIC                | 192.168.1.100| 255.255.255.0    | 192.168.1.1    |
+| Server1       | NIC                | 172.16.0.100 | 255.255.255.0    | 172.16.0.1     |
+| Router0 (LAN) | GigabitEthernet0/0 | 192.168.1.1  | 255.255.255.0    | -              |
+| Router0 (WAN) | GigabitEthernet0/1 | 10.0.0.1     | 255.255.255.252  | -              |
+| Router1 (WAN) | GigabitEthernet0/1 | 10.0.0.2     | 255.255.255.252  | -              |
+| Router1 (LAN) | GigabitEthernet0/0 | 172.16.0.1   | 255.255.255.0    | -              |
+| NAT Address   | (Public IP)        | 203.0.113.1  | N/A              | -              |
+
+###  Manual IP Configuration (PCs and Servers)
+Example for PC0:
+IP Address:       192.168.1.10
+Subnet Mask:      255.255.255.0
+Default Gateway:  192.168.1.1
+###  Inter-Router Link Configuration
+#### On Router0:
+interface Gig0/1
+ip address 10.0.0.1 255.255.255.252
+no shutdown
+#### On Router1:
+interface Gig0/1
+ip address 10.0.0.2 255.255.255.252
+no shutdown
+### NAT Configuration on Router1
+Objective: We access Server1 (172.16.0.100) from LAN 192.168.1.0/24 using the "public" address 203.0.113.1
+#### On Router1:
+conf t
+interface Gig0/0
+ip address 10.0.0.2 255.255.255.252 //-> the interface to Router0
+ip nat outside
+no shutdown
+
+interface Gig0/1
+ip address 172.16.0.1 255.255.255.0 //-> //-> the interface to Server1 
+ip nat inside
+no shutdown
+exit
+
+ip nat inside source static 172.16.0.100 203.0.113.1
+
+#### Optionally, on Router0:
+We set a static route from Lan 192.168.1.0/24 to the public address 203.0.113.1 of the Server1 from Lan 172.16.0.0/24. 
+ip route 203.0.113.0 255.255.255.0 10.0.0.2
+##### Accessing the server by name:
+Configuring DNS on Server0: we use Services tab, then activate the DNS, add a new registration with the name 'web1' and the address '203.0.113.1'
+
+Accesing 'http://web1' from PC0:
+![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
+
+
