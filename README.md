@@ -106,7 +106,10 @@ ip nat inside source static 172.16.0.100 203.0.113.1
 We set a static route from Lan 192.168.1.0/24 to the public address 203.0.113.1 of the Server1 from Lan 172.16.0.0/24. 
 ip route 203.0.113.0 255.255.255.0 10.0.0.2
 ##### Accessing the server by name:
-Configuring DNS on Server0: we use Services tab, then activate the DNS, add a new registration with the name 'web1' and the address '203.0.113.1'
+Configuring DNS on Server0: we use Services tab, then activate the DNS, add a new registration with the name 'web1' and the address '203.0.113.1'.
+Then, on PC1 and PC0, we should write at the DNS Server section the address 192.168.1.100( the DNS server). 
+![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc0.png?raw=true)
+![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc1.png?raw=true)
 
 Accesing 'http://web1' from PC0:
 ![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
@@ -164,3 +167,5 @@ Open Command Prompt on PC1 and run: ftp 192.168.1.100
 Using weak credentials:
 Username: guest
 Password: pass123
+![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc1.png?raw=true)
+
