@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 #  Network Security Simulation Project
 
 This project simulates a secure network architecture using **Cisco Packet Tracer**, focusing on access control, NAT configuration, and Red Team attack simulation.
