@@ -217,7 +217,7 @@ This project mimics real-world Red Team operations and provides a foundation for
 
 You can download and open the full network simulation in Cisco Packet Tracer:
 
- [Download .pkt file](./network-security-simulation.pkt)
+ [Download .pkt file](network-security-simulation.pkt)
 
 > Make sure you have Cisco Packet Tracer
 
