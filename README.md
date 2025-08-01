@@ -213,6 +213,14 @@ This project mimics real-world Red Team operations and provides a foundation for
 - Add **intrusion detection rules** using ACLs + behavior analysis
 - Expand simulation to include VLANs, VPN, or port security
 
+##  Project File Download
+
+You can download and open the full network simulation in Cisco Packet Tracer:
+
+ [Download .pkt file](./network-security-simulation.pkt)
+
+> Make sure you have Cisco Packet Tracer
+
   ###  Author
 
 **Nedelcu Bianca-Nicoleta**  
