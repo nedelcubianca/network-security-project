@@ -161,7 +161,7 @@ username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delet
 username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read' <br>
 ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/ftp_config.png?raw=true)
  
- #### Step 1: Legitimate Access - PC0
+#### Step 1: Legitimate Access - PC0
 Open Command Prompt on PC0 and run: ftp 192.168.1.100 <br>
 Enter:  <br>
 Username: admin <br>
@@ -185,7 +185,7 @@ Password: pass123 <br>
 ##  Section 5 – Final Conclusions & Lessons Learned
 This project shows how insecure services, weak credentials, and poor segmentation can expose networks to attack, even in simulated environments.
 
- ### Key Concepts Covered
+### Key Concepts Covered
  
 | **Network Design**    | Segmented LANs with routers, switches, PCs, and servers                |
 | **IP Addressing**     | Manual assignment of IPs across multiple subnets                       |
