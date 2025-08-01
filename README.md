@@ -61,44 +61,44 @@ This network simulates a segmented infrastructure with enforced access control a
 Static IP addresses were manually assigned, and NAT was configured to provide external access to the internal web server.
 
 ###  IP Address Plan
-Device - Interface - IP Address - Subnet Mask - Default Gateway
-PC0 - 192.168.1.10 - 255.255.255.0 - 192.168.1.1 
-PC1 - 192.168.1.11 - 255.255.255.0 - 192.168.1.1
-Server0 - 192.168.1.100 - 255.255.255.0 - 192.168.1.1
-Server1 - 172.16.0.100 - 255.255.255.0 -  172.16.0.1    
-Router0  - GigabitEthernet0/0 - 192.168.1.1 - 255.255.255.0  
-Router0  - GigabitEthernet0/1 - 10.0.0.1 - 255.255.255.252 
-Router1  - GigabitEthernet0/1 - 10.0.0.2 - 255.255.255.252  
-Router1  - GigabitEthernet0/0 - 172.16.0.1  - 255.255.255.0 
+Device - Interface - IP Address - Subnet Mask - Default Gateway <br>
+PC0 - 192.168.1.10 - 255.255.255.0 - 192.168.1.1 <br>
+PC1 - 192.168.1.11 - 255.255.255.0 - 192.168.1.1 <br>
+Server0 - 192.168.1.100 - 255.255.255.0 - 192.168.1.1 <br>
+Server1 - 172.16.0.100 - 255.255.255.0 -  172.16.0.1 <br>    
+Router0  - GigabitEthernet0/0 - 192.168.1.1 - 255.255.255.0 <br> 
+Router0  - GigabitEthernet0/1 - 10.0.0.1 - 255.255.255.252 <br>
+Router1  - GigabitEthernet0/1 - 10.0.0.2 - 255.255.255.252  <br>
+Router1  - GigabitEthernet0/0 - 172.16.0.1  - 255.255.255.0 <br>
 
 ###  Manual IP Configuration (PCs and Servers)
-Example for PC0:
-IP Address:       192.168.1.10
-Subnet Mask:      255.255.255.0
-Default Gateway:  192.168.1.1
+Example for PC0: <br>
+IP Address:       192.168.1.10 <br>
+Subnet Mask:      255.255.255.0 <br>
+Default Gateway:  192.168.1.1 <br>
 ![Example for PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/ip_config_pc0.png?raw=true)
 
 ###  Inter-Router Link Configuration
-#### On Router0:
-interface Gig0/1
-ip address 10.0.0.1 255.255.255.252
-no shutdown
+#### On Router0: 
+interface Gig0/1 <br>
+ip address 10.0.0.1 255.255.255.252 <br>
+no shutdown <br>
 #### On Router1:
-interface Gig0/1
-ip address 10.0.0.2 255.255.255.252
-no shutdown
+interface Gig0/1 <br>
+ip address 10.0.0.2 255.255.255.252 <br>
+no shutdown <br>
 ### NAT Configuration on Router1
 Objective: We access Server1 (172.16.0.100) from LAN 192.168.1.0/24 using the "public" address 203.0.113.1
 #### On Router1:
-**Router1(config)# interface Gig0/1
-Router1(config-if)# ip address 172.16.0.1 255.255.255.0
-Router1(config-if)# ip nat inside
-Router1(config-if)# no shutdown
-Router1(config)# interface Gig0/0
-Router1(config-if)# ip address 10.0.0.2 255.255.255.252 //-> the interface to Router0
-Router1(config-if)# ip nat outside
-Router1(config-if)# no shutdown
-Router1(config)# ip nat inside source static 172.16.0.100 203.0.113.1 //-> the interface to Server1**
+Router1(config)# interface Gig0/1 <br>
+Router1(config-if)# ip address 172.16.0.1 255.255.255.0 <br>
+Router1(config-if)# ip nat inside <br>
+Router1(config-if)# no shutdown <br>
+Router1(config)# interface Gig0/0 <br>
+Router1(config-if)# ip address 10.0.0.2 255.255.255.252 //-> the interface to Router0 <br>
+Router1(config-if)# ip nat outside <br>
+Router1(config-if)# no shutdown <br>
+Router1(config)# ip nat inside source static 172.16.0.100 203.0.113.1 //-> the interface to Server1 <br>
 
 #### Static Routing, on Router0:
 We set a static route from Lan 192.168.1.0/24 to the public address 203.0.113.1 of the Server1 from Lan 172.16.0.0/24. 
@@ -129,13 +129,13 @@ Access Control Lists (ACLs) are used to restrict traffic from the attacker devic
 
 ###  ACL Configuration on Router0
 #### Create an extended ACL (with log)
-Router0(config)# access-list 100 deny tcp 192.168.1.11 0.0.0.0 203.0.113.1 0.0.0.0 eq 80 log
-Router0(config)# access-list 100 deny tcp host 192.168.1.11 host 203.0.113.1 eq 443
-Router0(config)# access-list 100 permit ip any any
+Router0(config)# access-list 100 deny tcp 192.168.1.11 0.0.0.0 203.0.113.1 0.0.0.0 eq 80 log <br>
+Router0(config)# access-list 100 deny tcp host 192.168.1.11 host 203.0.113.1 eq 443 <br>
+Router0(config)# access-list 100 permit ip any any <br>
 #### Apply the ACL on the LAN interface
-Router0(config)# interface GigabitEthernet0/0
-Router0(config-if)# ip access-group 100 in
-Router0(config-if)# exit
+Router0(config)# interface GigabitEthernet0/0 <br>
+Router0(config-if)# ip access-group 100 in <br>
+Router0(config-if)# exit <br>
 #### Test with PC1:
 ![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/acl_pc1.png?raw=true)
 
@@ -153,28 +153,28 @@ This scenario simulates an attacker attempting to connect to an exposed FTP serv
 - Analyze potential risks and security implications
 
 ###  FTP ServerConfiguration – Server0
-**IP Address**: '192.168.1.100'
-**Service**: FTP
-**Status**: ON
+**IP Address**: '192.168.1.100' <br>
+**Service**: FTP <br>
+**Status**: ON <br>
 #### 👥 FTP Users:
-username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
-username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read'
+username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list' <br>
+username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read' <br>
 ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/ftp_config.png?raw=true)
  
  #### Step 1: Legitimate Access - PC0
-Open Command Prompt on PC0 and run: ftp 192.168.1.100
-Enter:  
-Username: admin
-Password: adminpass
-Testing the permissions in the image below:
+Open Command Prompt on PC0 and run: ftp 192.168.1.100 <br>
+Enter:  <br>
+Username: admin <br>
+Password: adminpass <br>
+Testing the permissions in the image below: <br>
 
 ![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/access_pc0.png?raw=true)
 
 #### Step 2: Unauthorized Access – PC1 (Red Team Simulation)
-Open Command Prompt on PC1 and run: ftp 192.168.1.100
-Using weak credentials:
-Username: guest
-Password: pass123
+Open Command Prompt on PC1 and run: ftp 192.168.1.100 <br>
+Using weak credentials: <br>
+Username: guest <br>
+Password: pass123 <br>
 ![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/access_pc1.png?raw=true)
 
 #### Security Analysis
@@ -185,7 +185,7 @@ Password: pass123
 ##  Section 5 – Final Conclusions & Lessons Learned
 This project shows how insecure services, weak credentials, and poor segmentation can expose networks to attack, even in simulated environments.
 
- ###  Key Concepts Covered
+ ### Key Concepts Covered
  
 | **Network Design**    | Segmented LANs with routers, switches, PCs, and servers                |
 | **IP Addressing**     | Manual assignment of IPs across multiple subnets                       |
@@ -228,8 +228,6 @@ This project mimics real-world Red Team operations and provides a foundation for
 You can download and open the full network simulation in Cisco Packet Tracer:
 
  [Download .pkt file](network-security-simulation.pkt)
-
-> Make sure you have Cisco Packet Tracer
 
 ### Author
 
