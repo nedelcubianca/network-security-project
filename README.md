@@ -1,14 +1,14 @@
 #  Network Security Simulation Project
 
-This project simulates a secure network architecture using **Cisco Packet Tracer**, focusing on access control, network monitoring, and offensive security testing.
+This project simulates a secure network architecture using **Cisco Packet Tracer**, focusing on access control, NAT configuration, and Red Team attack simulation.
 
 ##  Objective
 
 To design and implement a realistic network scenario where:
 - Devices are assigned static IPs.
-- **NAT** (Network Address Translation) is configured.
-- **ACLs** (Access Control Lists) are applied to restrict unauthorized access.
-- **Syslog** is used to monitor and log security events.
+- **NAT** (Network Address Translation) is configured for public web access.
+- **ACLs** (Access Control Lists) are applied to restrict unauthorized  HTTP/HTTPS access.
+- **FTP Server** is used to simulate brute-force access attempts.
 - **Red Team techniques** are simulated to test the resilience of the network.
 
 ##  Tools & Technologies
@@ -22,22 +22,19 @@ To design and implement a realistic network scenario where:
 1. Network Topology
 2. IP Configuration & NAT Setup
 3. ACL Implementation (HTTP/HTTPS restrictions)
-4. Syslog Server Monitoring
-5. Red Team Simulation (port scanning, bypass attempts)
-6. Results & Security Improvements
-
----
+4. Red Team Simulation – FTP Attack
+5. Final Conclusions & Lessons Learned
 
 ##  1. Network Topology
 
-This network simulates a secure, segmented infrastructure with access control and monitoring mechanisms.
+This network simulates a segmented infrastructure with enforced access control and isolated services.
 
 ### Devices & Addresses
 
 #### LAN 192.168.1.0/24 (User/Attacker Zone - Behind Router0)
 - PC0: '192.168.1.10' (Normal user)
 - PC1: '192.168.1.11' (Simulated attacker)
-- Server0: '192.168.1.100' (Syslog)
+- Server0: '192.168.1.100' (DNS & FTP Server)
 - Switch0
 - Router0
 
@@ -46,9 +43,8 @@ This network simulates a secure, segmented infrastructure with access control an
 - Switch1
 - Router1
 
-
 #### Inter-router Link
-- Router0 <=> Router1: '10.0.0.1/30' <=> '10.0.0.2/30'
+- Router0 <=> Router1: 10.0.0.1 <=> 10.0.0.2
 
 
 ###  Network Topology Diagram
@@ -56,25 +52,26 @@ This network simulates a secure, segmented infrastructure with access control an
 
 
 ##  2. IP Addressing & NAT Configuration
-In this step, static IP addresses are manually assigned to all devices, and NAT is configured to allow public access to the internal web server.
+Static IP addresses were manually assigned, and NAT was configured to provide external access to the internal web server.
 
 ###  IP Address Plan
-Device - Interface - IP Address - Subnet Mask - Default Gateway|
+Device - Interface - IP Address - Subnet Mask - Default Gateway
 PC0 - 192.168.1.10 - 255.255.255.0 - 192.168.1.1 
 PC1 - 192.168.1.11 - 255.255.255.0 - 192.168.1.1
 Server0 - 192.168.1.100 - 255.255.255.0 - 192.168.1.1
 Server1 - 172.16.0.100 - 255.255.255.0 -  172.16.0.1    
-Router0 (LAN) - GigabitEthernet0/0 - 192.168.1.1 - 255.255.255.0  
-Router0 (WAN) - GigabitEthernet0/1 - 10.0.0.1 - 255.255.255.252 
-Router1 (WAN) - GigabitEthernet0/1 - 10.0.0.2 - 255.255.255.252  
-Router1 (LAN) - GigabitEthernet0/0 - 172.16.0.1  - 255.255.255.0 
-NAT Address - (Public IP) - 203.0.113.1
+Router0  - GigabitEthernet0/0 - 192.168.1.1 - 255.255.255.0  
+Router0  - GigabitEthernet0/1 - 10.0.0.1 - 255.255.255.252 
+Router1  - GigabitEthernet0/1 - 10.0.0.2 - 255.255.255.252  
+Router1  - GigabitEthernet0/0 - 172.16.0.1  - 255.255.255.0 
 
 ###  Manual IP Configuration (PCs and Servers)
 Example for PC0:
 IP Address:       192.168.1.10
 Subnet Mask:      255.255.255.0
 Default Gateway:  192.168.1.1
+![Example for PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/ip_config_pc0.png?raw=true)
+
 ###  Inter-Router Link Configuration
 #### On Router0:
 interface Gig0/1
@@ -87,38 +84,40 @@ no shutdown
 ### NAT Configuration on Router1
 Objective: We access Server1 (172.16.0.100) from LAN 192.168.1.0/24 using the "public" address 203.0.113.1
 #### On Router1:
-conf t
-interface Gig0/0
-ip address 10.0.0.2 255.255.255.252 //-> the interface to Router0
-ip nat outside
-no shutdown
+Router1(config)# interface Gig0/1
+Router1(config-if)# ip address 172.16.0.1 255.255.255.0
+Router1(config-if)# ip nat inside
+Router1(config-if)# no shutdown
+Router1(config)# interface Gig0/0
+Router1(config-if)# ip address 10.0.0.2 255.255.255.252 //-> the interface to Router0
+Router1(config-if)# ip nat outside
+Router1(config-if)# no shutdown
+Router1(config)# ip nat inside source static 172.16.0.100 203.0.113.1 //-> the interface to Server1 
 
-interface Gig0/1
-ip address 172.16.0.1 255.255.255.0 //-> the interface to Server1 
-ip nat inside
-no shutdown
-exit
-
-ip nat inside source static 172.16.0.100 203.0.113.1
-
-#### Optionally, on Router0:
+#### Static Routing, on Router0:
 We set a static route from Lan 192.168.1.0/24 to the public address 203.0.113.1 of the Server1 from Lan 172.16.0.0/24. 
-ip route 203.0.113.0 255.255.255.0 10.0.0.2
-##### Accessing the server by name:
-Configuring DNS on Server0: we use Services tab, then activate the DNS, add a new registration with the name 'web1' and the address '203.0.113.1'.
-Then, on PC1 and PC0, we should write at the DNS Server section the address 192.168.1.100( the DNS server). 
+Router0(config)# ip route 203.0.113.0 255.255.255.0 10.0.0.2
+
+##### DNS Setup:
+- Server0 (192.168.1.100) is configured as a DNS server
+- Registered name: web1 → 203.0.113.1
+- PCs must set DNS server to 192.168.1.100
+- 
 ![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc0.png?raw=true)
+
 ![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc1.png?raw=true)
 
 Accesing 'http://web1' from PC0:
 ![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
 
 Also, we can successfully access 'http://203.0.113.1' and 'https://203.0.113.1'.
+
 Note: If we intend to configure an additional public IP address to be reachable by the 192.168.1.0/24 internal network, a separate and properly configured server is required. A single server cannot be assigned multiple distinct NAT public addresses for the same internal network segment.
+
 ## 3. ACL Implementation – Restricting Web Access
 Access Control Lists (ACLs) are used to restrict traffic from the attacker device (PC1) to the internal web server (Server1) using both HTTP (port 80) and HTTPS (port 443). All other traffic remains permitted.
 ### Goal
-- Deny PC1 (`192.168.1.11`) from accessing `Server1 (203.0.113.1)` via ports 80 and 443
+- Deny PC1 (192.168.1.11) from accessing Server1 (203.0.113.1) via ports 80 and 443
 - Allow all other traffic
 ###  ACL Configuration on Router0
 #### Create an extended ACL (with log)
@@ -131,20 +130,20 @@ Router0(config-if)# ip access-group 100 in
 Router0(config-if)# exit
 #### Test with PC1:
 ![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/acl_pc1.png?raw=true)
+
 #### Verify ACL Matches
 ![Verify ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/verify_acl.png?raw=true)
 ##  Section 4 – Red Team Simulation: FTP Attack
-In this section, we simulate a real-world scenario where an attacker attempts to exploit an exposed FTP server using weak credentials and limited permissions. This exercise demonstrates the risks associated with insecure services in a networked environment.
+This scenario simulates an attacker attempting to connect to an exposed FTP server using weak credentials.
 
 ### Objective
-
 - Deploy and configure an FTP server on Server0
 - Create two FTP users: one with full permissions ('admin') and one with restricted access ('guest')
 - Simulate a legitimate connection from PC0
 - Simulate an unauthorized access attempt from PC1
 - Analyze potential risks and security implications
-- 
-  ###  FTP Server Setup – Server0
+ 
+  ###  FTP ServerConfiguration – Server0
  **IP Address**: '192.168.1.100'
  **Service**: FTP
  **Status**: ON
@@ -152,7 +151,7 @@ In this section, we simulate a real-world scenario where an attacker attempts to
  username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
  username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read'
  ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/ftp_config.png?raw=true)
- #### Step 1: Legitimate Access from PC0
+ #### Step 1: Legitimate Access - PC0
 Open Command Prompt on PC0 and run: ftp 192.168.1.100
 Enter:  
 Username: admin
@@ -161,7 +160,7 @@ Testing the permissions in the image below:
 
 ![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc0.png?raw=true)
 
-#### Step 2: Red Team Access Attempt from PC1
+#### Step 2: Unauthorized Access – PC1 (Red Team Simulation)
 Open Command Prompt on PC1 and run: ftp 192.168.1.100
 Using weak credentials:
 Username: guest
@@ -169,15 +168,12 @@ Password: pass123
 ![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc1.png?raw=true)
 
 #### Security Analysis
-- FTP is an insecure protocol: credentials and files are transferred in plaintext.
-- Guest account had weak credentials (1234), demonstrating poor password policy.
-- Even though the attacker (PC1) accessed the server, their permissions were limited by design (only list allowed).
-- The simulation highlights:
-  + Importance of strong passwords
-  + Risk of enabling FTP without access control
+- FTP transmits credentials in plaintext -> insecure
+- Guest access, if not properly limited, could aid recon or exploitation
+- Demonstrates the principle of **least privilege**
 
 ##  Section 5 – Final Conclusions & Lessons Learned
-This project demonstrates the design, implementation, and security testing of a segmented network using Cisco Packet Tracer. By combining networking concepts with offensive security techniques, we simulated realistic scenarios involving access control, service exposure, and attack mitigation.
+This project shows how insecure services, weak credentials, and poor segmentation can expose networks to attack, even in simulated environments.
 
  ###  Key Concepts Covered
  
@@ -210,16 +206,10 @@ This project mimics real-world Red Team operations and provides a foundation for
 - Identifying exposed services
 - Demonstrating how attackers operate and how defenders can respond
 
-It also serves as a starting point for more advanced security topics:
-- IDS/IPS integration
-- Firewall rule tuning
-- DNS spoofing or phishing simulation
-- Secure service replacement (e.g., SFTP instead of FTP)
-
 ### 📚 Future Improvements
 
-- Replace FTP with **SFTP over SSH** for secure file transfer
-- Introduce **logging/monitoring mechanisms** (e.g., simulated syslog with better reliability)
+- Replace FTP with **SFTP (SSH-based)** for secure file transfer
+- Introduce **logging/monitoring mechanisms** ( simulated syslog with better reliability)
 - Add **intrusion detection rules** using ACLs + behavior analysis
 - Expand simulation to include VLANs, VPN, or port security
 
