@@ -60,17 +60,16 @@ This network simulates a secure, segmented infrastructure with access control an
 In this step, static IP addresses are manually assigned to all devices, and NAT is configured to allow public access to the internal web server.
 
 ###  IP Address Plan
-| Device        | Interface          | IP Address   | Subnet Mask      | Default Gateway|
-|---------------|--------------------|--------------|------------------|----------------|
-| PC0           | NIC                | 192.168.1.10 | 255.255.255.0    | 192.168.1.1    |
-| PC1           | NIC                | 192.168.1.11 | 255.255.255.0    | 192.168.1.1    |
-| Server0       | NIC                | 192.168.1.100| 255.255.255.0    | 192.168.1.1    |
-| Server1       | NIC                | 172.16.0.100 | 255.255.255.0    | 172.16.0.1     |
-| Router0 (LAN) | GigabitEthernet0/0 | 192.168.1.1  | 255.255.255.0    | -              |
-| Router0 (WAN) | GigabitEthernet0/1 | 10.0.0.1     | 255.255.255.252  | -              |
-| Router1 (WAN) | GigabitEthernet0/1 | 10.0.0.2     | 255.255.255.252  | -              |
-| Router1 (LAN) | GigabitEthernet0/0 | 172.16.0.1   | 255.255.255.0    | -              |
-| NAT Address   | (Public IP)        | 203.0.113.1  | N/A              | -              |
+|Device| Interface|IP Address|Subnet Mask|Default Gateway|
+PC0 - 192.168.1.10 - 255.255.255.0 - 192.168.1.1 
+PC1 - 192.168.1.11 - 255.255.255.0 - 192.168.1.1
+Server0 - 192.168.1.100 - 255.255.255.0 - 192.168.1.1
+Server1 - 172.16.0.100 - 255.255.255.0 -  172.16.0.1    
+Router0 (LAN) - GigabitEthernet0/0 - 192.168.1.1 - 255.255.255.0  
+Router0 (WAN) - GigabitEthernet0/1 - 10.0.0.1 - 255.255.255.252 
+Router1 (WAN) - GigabitEthernet0/1 - 10.0.0.2 - 255.255.255.252  
+Router1 (LAN) - GigabitEthernet0/0 - 172.16.0.1  - 255.255.255.0 
+NAT Address - (Public IP) - 203.0.113.1
 
 ###  Manual IP Configuration (PCs and Servers)
 Example for PC0:
@@ -149,11 +148,19 @@ In this section, we simulate a real-world scenario where an attacker attempts to
  **Status**: ON
  #### 👥 FTP Users:
  username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
- username2 : 'guest'  password2 : 'pass123'  permissions2 : 'list'
+ username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read'
  ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/ftp_config.png?raw=true)
  #### Step 1: Legitimate Access from PC0
- Open Command Prompt on PC0 and run: ftp 192.168.1.100
- Enter:  
+Open Command Prompt on PC0 and run: ftp 192.168.1.100
+Enter:  
 Username: admin
 Password: adminpass
+Testing the permissions in the image below:
+
 ![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc0.png?raw=true)
+
+#### Step 2: Red Team Access Attempt from PC1
+Open Command Prompt on PC1 and run: ftp 192.168.1.100
+Using weak credentials:
+Username: guest
+Password: pass123
