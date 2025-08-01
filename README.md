@@ -48,7 +48,7 @@ This network simulates a segmented infrastructure with enforced access control a
 
 
 ###  Network Topology Diagram
-![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/Topology_img.png?raw=true)
+![Network Topology](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/Topology_img.png?raw=true)
 
 
 ##  2. IP Addressing & NAT Configuration
@@ -70,7 +70,7 @@ Example for PC0:
 IP Address:       192.168.1.10
 Subnet Mask:      255.255.255.0
 Default Gateway:  192.168.1.1
-![Example for PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/ip_config_pc0.png?raw=true)
+![Example for PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/ip_config_pc0.png?raw=true)
 
 ###  Inter-Router Link Configuration
 #### On Router0:
@@ -103,12 +103,12 @@ Router0(config)# ip route 203.0.113.0 255.255.255.0 10.0.0.2
 - Registered name: web1 → 203.0.113.1
 - PCs must set DNS server to 192.168.1.100
 - 
-![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc0.png?raw=true)
+![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/dns_pc0.png?raw=true)
 
-![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/dns_pc1.png?raw=true)
+![Accessing the server by name](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/dns_pc1.png?raw=true)
 
 Accesing 'http://web1' from PC0:
-![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/nat_pc0.png?raw=true)
+![Demonstration of accesing web1 on PC0](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/nat_pc0.png?raw=true)
 
 Also, we can successfully access 'http://203.0.113.1' and 'https://203.0.113.1'.
 
@@ -129,10 +129,10 @@ Router0(config)# interface GigabitEthernet0/0
 Router0(config-if)# ip access-group 100 in
 Router0(config-if)# exit
 #### Test with PC1:
-![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/acl_pc1.png?raw=true)
+![Test with PC1 ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/acl_pc1.png?raw=true)
 
 #### Verify ACL Matches
-![Verify ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/verify_acl.png?raw=true)
+![Verify ACL ](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/verify_acl.png?raw=true)
 ##  Section 4 – Red Team Simulation: FTP Attack
 This scenario simulates an attacker attempting to connect to an exposed FTP server using weak credentials.
 
@@ -150,7 +150,7 @@ This scenario simulates an attacker attempting to connect to an exposed FTP serv
  #### 👥 FTP Users:
  username1 : 'admin'  password1 : 'adminpass'  permissions1 : 'read, write, delete, rename, list'
  username2 : 'guest'  password2 : 'pass123'  permissions2 : 'read'
- ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/ftp_config.png?raw=true)
+ ![FTP Config](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/ftp_config.png?raw=true)
  #### Step 1: Legitimate Access - PC0
 Open Command Prompt on PC0 and run: ftp 192.168.1.100
 Enter:  
@@ -158,14 +158,14 @@ Username: admin
 Password: adminpass
 Testing the permissions in the image below:
 
-![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc0.png?raw=true)
+![Legitimate Access](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/access_pc0.png?raw=true)
 
 #### Step 2: Unauthorized Access – PC1 (Red Team Simulation)
 Open Command Prompt on PC1 and run: ftp 192.168.1.100
 Using weak credentials:
 Username: guest
 Password: pass123
-![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc1.png?raw=true)
+![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/images/access_pc1.png?raw=true)
 
 #### Security Analysis
 - FTP transmits credentials in plaintext -> insecure
