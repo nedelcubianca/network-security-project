@@ -43,7 +43,6 @@ This network simulates a secure, segmented infrastructure with access control an
 
 #### LAN 172.16.0.0/24 (Service Zone - Behind Router1)
 - Server1: '203.0.113.1' (Web Server via NAT)
-- Server2: Reserved
 - Switch1
 - Router1
 
@@ -60,7 +59,7 @@ This network simulates a secure, segmented infrastructure with access control an
 In this step, static IP addresses are manually assigned to all devices, and NAT is configured to allow public access to the internal web server.
 
 ###  IP Address Plan
-|Device| Interface|IP Address|Subnet Mask|Default Gateway|
+Device - Interface - IP Address - Subnet Mask - Default Gateway|
 PC0 - 192.168.1.10 - 255.255.255.0 - 192.168.1.1 
 PC1 - 192.168.1.11 - 255.255.255.0 - 192.168.1.1
 Server0 - 192.168.1.100 - 255.255.255.0 - 192.168.1.1
@@ -169,3 +168,65 @@ Username: guest
 Password: pass123
 ![Access Attempt](https://github.com/nedelcubianca/network-security-project/blob/index.html/access_pc1.png?raw=true)
 
+#### Security Analysis
+- FTP is an insecure protocol: credentials and files are transferred in plaintext.
+- Guest account had weak credentials (1234), demonstrating poor password policy.
+- Even though the attacker (PC1) accessed the server, their permissions were limited by design (only list allowed).
+- The simulation highlights:
+  + Importance of strong passwords
+  + Risk of enabling FTP without access control
+
+##  Section 5 – Final Conclusions & Lessons Learned
+This project demonstrates the design, implementation, and security testing of a segmented network using Cisco Packet Tracer. By combining networking concepts with offensive security techniques, we simulated realistic scenarios involving access control, service exposure, and attack mitigation.
+
+ ###  Key Concepts Covered
+ 
+| **Network Design**    | Segmented LANs with routers, switches, PCs, and servers                |
+| **IP Addressing**     | Manual assignment of IPs across multiple subnets                       |
+| **NAT Configuration** | Allowed internal devices to access external services via translation   |
+| **Access Control**    | ACLs were applied to limit web access to certain devices               |
+| **Red Team Testing**  | Simulated brute-force attack on an FTP server with limited permissions |
+
+###  Lessons Learned
+- **FTP is inherently insecure**  
+  Using it without encryption or strong authentication poses major risks.
+
+- **Weak credentials are dangerous**  
+  Even limited guest access can be exploited during recon and lateral movement.
+
+- **ACLs provide essential control**  
+  Properly configured access control lists can block or allow specific traffic, enforcing policy boundaries.
+
+- **Least Privilege Principle matters**  
+  Granting users only the permissions they need reduces the impact of potential breaches.
+
+- **Simulation tools are valuable**  
+  Packet Tracer enables realistic testing of network behaviors and security controls in a controlled environment.
+
+###  Cybersecurity Perspective
+
+This project mimics real-world Red Team operations and provides a foundation for:
+- Analyzing insecure protocols
+- Identifying exposed services
+- Demonstrating how attackers operate and how defenders can respond
+
+It also serves as a starting point for more advanced security topics:
+- IDS/IPS integration
+- Firewall rule tuning
+- DNS spoofing or phishing simulation
+- Secure service replacement (e.g., SFTP instead of FTP)
+
+### 📚 Future Improvements
+
+- Replace FTP with **SFTP over SSH** for secure file transfer
+- Introduce **logging/monitoring mechanisms** (e.g., simulated syslog with better reliability)
+- Add **intrusion detection rules** using ACLs + behavior analysis
+- Expand simulation to include VLANs, VPN, or port security
+
+  ###  Author
+
+**Nedelcu Bianca-Nicoleta**  
+Systems Engineering Student  
+Project: *Network Design & Red Team Simulation – Cisco Packet Tracer*
+
+> "To secure the future, you have to keep hacking your limits."
